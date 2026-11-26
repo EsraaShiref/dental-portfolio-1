@@ -1,0 +1,15 @@
+# Portfolio roadmap
+- [x] Compact phone course cards into an accordion and stories into a swipeable manual pager.
+- [x] Polish phone Portfolio, Skills, Contact and footer; verify all six widths and unchanged desktop.
+- [x] Apply mobile navbar, drawer, portrait-first Home, About photo visibility and floating-button improvements.
+- [x] Verify mobile interactions at 360, 390, 414 and 768px and unchanged desktop at 1024 and 1440px.
+- [x] Build all six sections with supplied content and portrait.
+- [x] Implement comparisons, filters, video modals, navigation and WhatsApp form.
+- [x] Verify required rules, interactions and four viewport sizes.- [x] Add five Endodontics radiograph cases (endo-1 to endo-5) shown whole on a dark backdrop.
+- [x] Keep only the five real cases and make each radiograph fill its card.
+- [x] Redesign Continuing Education with typed tracks, course count and reduced-motion support.
+- [x] Verify the course layout at four widths and Education navigation.
+- [x] Redesign Patient Stories as a featured story and accessible picker, with three labelled demos.
+- [x] Verify story timing, pause behavior, case links and navigation at four screen widths.
+- [ ] Redesign Home only with arch portrait, animated text and catalog-derived statistics.
+- [ ] Verify Home, unchanged sections, buttons and navigation at all four requested widths.
