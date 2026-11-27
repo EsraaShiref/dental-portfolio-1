@@ -17,52 +17,62 @@ A high-performance, fully responsive, single-page portfolio for a general dentis
 ## 🚀 Key Features
 
 ### Modern architecture
+
 Server-rendered **TanStack Start** app with file-based routing (`src/routes/`). All editable content lives in typed modules under `src/data/`, so updates never require component changes.
 
 ### Animations and transitions
+
 **Framer Motion** powers staggered section reveals, count-up statistics, the orbiting Continuing Education graphic and story crossfades. All motion respects `prefers-reduced-motion`.
 
 ### Before/after case galleries and lightbox
+
 A draggable **before/after slider** for paired cases plus single-image cases, filterable by category (Endodontics, Restorative, Fixed, Surgery) with **See more** pagination. Cases and portrait videos open in an accessible **lightbox**.
 
 ### Intro splash video
+
 A full-screen intro video with **Skip**, sound toggle and progress bar; tries to play with sound and falls back to a **Tap to turn sound on** prompt.
 
 ### Patient Stories
+
 Featured story with a keyboard-accessible tab picker and a **pause-aware autoplay timer** on desktop; manual swipe paging on phones. A `SHOW_UNVERIFIED_STORIES` flag controls consent-pending stories.
 
 ### Sticky navbar and mobile menu
+
 Sticky header with **scroll-spy** active section indicator. Below `1024px` a **Radix Dialog** drawer provides focus trapping and scroll restoration.
 
 ### Floating WhatsApp booking
+
 A floating WhatsApp button and **Book Appointment** buttons open a pre-filled chat. On phones the button slides away while scrolling down.
 
 ### Personal branding
+
 The doctor's round photo is used as the logo in the navbar, mobile menu and footer, and as the browser **favicon** and `apple-touch-icon`. The hero features a full clinical portrait.
 
 ### Responsive, mobile-first design
+
 Dedicated phone layouts below `768px`: portrait-first hero, course accordions, compact galleries, 44px+ touch targets and a centered mobile footer.
 
 ### SEO and performance
+
 Per-route `head()` metadata (title, description, Open Graph, Twitter card, canonical), semantic HTML, lazy-loaded media and CDN-hosted assets.
 
 ---
 
 ## 🛠 Tech Stack
 
-| Technology | Purpose | Version |
-|---|---|---|
-| TanStack Start | Full-stack React framework (SSR, routing) | 1.168 |
-| TanStack Router | File-based routing | 1.170 |
-| TanStack Query | Data layer | 5.101 |
-| React | UI library | 19.2 |
-| TypeScript | Type safety | 5.8 |
-| Vite | Build tool and dev server | 8.1 |
-| Tailwind CSS | Styling and design tokens | 4.3 |
-| Framer Motion | Animations | 14.14 |
-| Radix UI (Dialog) | Accessible mobile menu | 1.1 |
-| Lucide React | Icons | 0.575 |
-| Vitest | Unit and component tests | 4.1 |
+| Technology        | Purpose                                   | Version |
+| ----------------- | ----------------------------------------- | ------- |
+| TanStack Start    | Full-stack React framework (SSR, routing) | 1.168   |
+| TanStack Router   | File-based routing                        | 1.170   |
+| TanStack Query    | Data layer                                | 5.101   |
+| React             | UI library                                | 19.2    |
+| TypeScript        | Type safety                               | 5.8     |
+| Vite              | Build tool and dev server                 | 8.1     |
+| Tailwind CSS      | Styling and design tokens                 | 4.3     |
+| Framer Motion     | Animations                                | 14.14   |
+| Radix UI (Dialog) | Accessible mobile menu                    | 1.1     |
+| Lucide React      | Icons                                     | 0.575   |
+| Vitest            | Unit and component tests                  | 4.1     |
 
 ---
 
@@ -118,23 +128,22 @@ bun run test       # run the tests
 
 ## 🎨 Customization
 
-| What | Where |
-|---|---|
-| Doctor's name, location, email, phone | `src/data/profile.ts` (`profile`) |
-| WhatsApp number and booking message | `src/data/profile.ts` (`appointmentUrl`) |
-| Experience, skills, courses, social links | `src/data/profile.ts` |
-| Hero portrait | `src/assets/mohamed-samy-portrait.png.asset.json` |
-| Logo photo and icons | `public/doctor-avatar.png`, `public/favicon-*.png`, `public/apple-touch-icon.png` |
-| Colors, fonts and theme | `src/styles.css` (theme variables); fonts in `src/routes/__root.tsx` |
-| Portfolio cases and videos | Files in `public/cases/<category>/`, entries in `src/data/portfolio.ts` |
-| Patient stories | `src/data/stories.ts` |
-| Page title and SEO text | `src/routes/index.tsx` (`head()`) |
+| What                                      | Where                                                                             |
+| ----------------------------------------- | --------------------------------------------------------------------------------- |
+| Doctor's name, location, email, phone     | `src/data/profile.ts` (`profile`)                                                 |
+| WhatsApp number and booking message       | `src/data/profile.ts` (`appointmentUrl`)                                          |
+| Experience, skills, courses, social links | `src/data/profile.ts`                                                             |
+| Hero portrait                             | `src/assets/mohamed-samy-portrait.png.asset.json`                                 |
+| Logo photo and icons                      | `public/doctor-avatar.png`, `public/favicon-*.png`, `public/apple-touch-icon.png` |
+| Colors, fonts and theme                   | `src/styles.css` (theme variables); fonts in `src/routes/__root.tsx`              |
+| Portfolio cases and videos                | Files in `public/cases/<category>/`, entries in `src/data/portfolio.ts`           |
+| Patient stories                           | `src/data/stories.ts`                                                             |
+| Page title and SEO text                   | `src/routes/index.tsx` (`head()`)                                                 |
 
 ---
 
 ## 🌐 Deployment
 
-- **Lovable:** click **Publish** in the Lovable editor.
 - **Vercel / Netlify:** import the repository and use `bun run build`. TanStack Start may need its matching deployment preset.
 - **GitHub Pages:** not recommended, as the app uses server rendering; a static export would need extra setup.
 
