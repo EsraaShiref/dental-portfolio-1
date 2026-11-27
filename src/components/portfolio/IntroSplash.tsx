@@ -1,68 +1,85 @@
 import { useEffect, useRef, useState } from "react";
-import { Volume2, VolumeX, X } from "lucide-react";
-import { introVideoSrc } from "@/data/portfolio";
+import { Play, Volume2, VolumeX, X } from "lucide-react";
+import { introPosterSrc, introVideoSrc } from "@/data/portfolio";
 
-/** Full-screen intro video shown on every page load (skipped for reduced motion). */
+const MP4_TYPE = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+
+/** Full-screen intro video shown on every page load. Starts muted (iOS-safe); a tap enables sound. */
 export function IntroSplash() {
   const [state, setState] = useState<"open" | "closing" | "closed">("open");
-  const [muted, setMuted] = useState(false);
-  const [needsSound, setNeedsSound] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [needsTap, setNeedsTap] = useState(false);
   const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const skipRef = useRef<HTMLButtonElement>(null);
   const previousFocus = useRef<Element | null>(null);
+  const playingRef = useRef(false);
 
   const close = () => setState((s) => (s === "open" ? "closing" : s));
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setState("closed");
-      return;
-    }
     previousFocus.current = document.activeElement;
     skipRef.current?.focus();
     const v = videoRef.current;
     if (!v) return;
-    // Try with sound first; browsers may block unmuted autoplay, so fall back to muted.
-    v.muted = false;
-    v.volume = 1;
-    v.play().catch(() => {
-      v.muted = true;
-      setNeedsSound(true);
-      v.play().catch(() => close());
-    });
+    if (v.canPlayType(MP4_TYPE) === "") {
+      close();
+      return;
+    }
+    v.muted = true;
+    v.defaultMuted = true;
+    v.setAttribute("muted", "");
+    v.setAttribute("playsinline", "");
+    v.playsInline = true;
+    const timer = window.setTimeout(() => {
+      if (!playingRef.current) setNeedsTap(true);
+    }, 1500);
+    v.play().catch(() => setNeedsTap(true));
+    return () => window.clearTimeout(timer);
   }, []);
 
+  // Position-safe scroll lock (works in iOS Safari) + Escape to close.
   useEffect(() => {
     if (state === "closed") return;
-    const original = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const body = document.body;
+    const scrollY = window.scrollY;
+    const prev = { position: body.style.position, top: body.style.top, width: body.style.width, overflow: body.style.overflow };
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+    body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = original;
+      Object.assign(body.style, prev);
+      window.scrollTo(0, scrollY);
       window.removeEventListener("keydown", onKey);
     };
-  }, [state]);
+  }, [state === "closed"]);
 
   useEffect(() => {
     if (state !== "closing") return;
     videoRef.current?.pause();
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const t = window.setTimeout(() => {
       setState("closed");
       const prev = previousFocus.current;
       if (prev instanceof HTMLElement && prev !== document.body) prev.focus();
       else document.querySelector<HTMLElement>("main")?.focus({ preventScroll: true });
-    }, 500);
+    }, reduce ? 0 : 500);
     return () => window.clearTimeout(t);
   }, [state]);
 
-  const turnSoundOn = () => {
+  const playWithSound = () => {
     const v = videoRef.current;
     if (!v) return;
     v.muted = false;
     v.volume = 1;
-    setNeedsSound(false);
+    setNeedsTap(false);
+    v.play().catch(() => {
+      v.muted = true;
+      v.play().catch(() => setNeedsTap(true));
+    });
   };
 
   if (state === "closed") return null;
@@ -76,21 +93,26 @@ export function IntroSplash() {
       <div className="intro-frame">
         <video
           ref={videoRef}
-          src={introVideoSrc}
-          onClick={needsSound ? turnSoundOn : undefined}
-          onVolumeChange={(e) => {
-            setMuted(e.currentTarget.muted);
-            if (!e.currentTarget.muted) setNeedsSound(false);
-          }}
+          poster={introPosterSrc}
+          muted
           playsInline
-          preload="auto"
+          webkit-playsinline="true"
+          preload="metadata"
+          onClick={muted || needsTap ? playWithSound : undefined}
+          onPlaying={() => {
+            playingRef.current = true;
+            setNeedsTap(false);
+          }}
+          onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
           onEnded={close}
           onError={close}
           onTimeUpdate={(e) => {
             const v = e.currentTarget;
             if (v.duration) setProgress(v.currentTime / v.duration);
           }}
-        />
+        >
+          <source src={introVideoSrc} type="video/mp4" onError={close} />
+        </video>
         <button
           type="button"
           className="intro-mute"
@@ -106,10 +128,19 @@ export function IntroSplash() {
       <button ref={skipRef} type="button" className="intro-skip" onClick={close}>
         Skip <X size={16} />
       </button>
-      {needsSound && (
-        <button type="button" className="intro-sound" onClick={turnSoundOn}>
-          <VolumeX size={20} /> Tap to turn sound on
+      {needsTap ? (
+        <button type="button" className="intro-play" onClick={playWithSound}>
+          <span className="intro-play-circle">
+            <Play size={30} fill="currentColor" />
+          </span>
+          Tap to play
         </button>
+      ) : (
+        muted && (
+          <button type="button" className="intro-sound" onClick={playWithSound}>
+            <VolumeX size={20} /> Tap to turn sound on
+          </button>
+        )
       )}
       <p className="intro-caption">Dr. Mohamed Samy</p>
       <div className="intro-progress" aria-hidden="true">

@@ -332,3 +332,4 @@ export const videos: DentalVideo[] = [1, 2, 3].map((id) => ({
 
 /** Intro splash video shown full-screen on every page load. */
 export const introVideoSrc = "/cases/Content-Creator/Video-3.mp4";
+export const introPosterSrc = "/cases/Content-Creator/intro-poster.jpg";
