@@ -10,6 +10,7 @@ import {
   skillGroups,
   courses,
   courseTracks,
+  profile,
 } from "@/data/profile";
 import {
   type ComparisonCase,
@@ -23,6 +24,9 @@ import {
   INITIAL_VISIBLE,
 } from "@/data/portfolio";
 describe("Portfolio rules", () => {
+  it("uses the supplied doctor location as the shared profile value", () => {
+    expect(profile.location).toBe("Dekernes City, Ad Daqahliyah, Egypt");
+  });
   it("derives Home clinic statistics from all experience entries", () => {
     expect(heroStats[0].value).toBe(experience.length);
     expect(heroStats[0].value).toBe(3);

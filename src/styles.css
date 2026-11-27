@@ -415,9 +415,20 @@
   bottom: 3px;
   right: 5px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  max-width: calc(100% - 10px);
   gap: 5px;
   color: var(--primary);
+}
+.portrait-location > span,
+.about-image-caption > span:last-child > span {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: normal;
+}
+.portrait-location > svg,
+.about-image-caption > span:last-child > svg {
+  flex-shrink: 0;
 }
 .hero-bottom {
   border-top: 1px solid var(--border);
@@ -499,7 +510,7 @@
 }
 .about-image-caption > span:last-child {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
   color: var(--footer-muted);
 }
@@ -1103,6 +1114,15 @@
   display: block;
   color: var(--primary);
   overflow-wrap: anywhere;
+}
+.contact-list > .contact-location {
+  align-items: start;
+  height: auto;
+  min-height: 56px;
+}
+.contact-location strong {
+  white-space: normal;
+  overflow-wrap: normal;
 }
 .contact-list > a > svg {
   width: 16px;

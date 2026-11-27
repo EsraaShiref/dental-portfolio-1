@@ -44,7 +44,7 @@ export function Contact() {
               </span>
               <ArrowUpRight />
             </a>
-            <div>
+            <div className="contact-location">
               <span className="icon-tile">
                 <MapPin />
               </span>

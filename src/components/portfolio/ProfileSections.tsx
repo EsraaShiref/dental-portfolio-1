@@ -102,7 +102,7 @@ export function Hero() {
             <BadgeCheck className="text-accent" />
           </div>
           <div className="portrait-location">
-            <MapPin size={14} /> Tanta, Egypt
+            <MapPin size={14} /><span>{profile.location}</span>
           </div>
         </Reveal>
       </div>
@@ -151,7 +151,7 @@ export function About() {
         <Reveal className="about-image">
           <img
             src={profile.portrait}
-            alt="Dr. Mohamed Samy, General Dentist in Tanta"
+            alt={`${profile.name}, General Dentist in ${profile.location}`}
             loading="lazy"
             width="768"
             height="841"
@@ -165,7 +165,7 @@ export function About() {
             </h3>
             <span>
               <MapPin size={15} />
-              Tanta, Egypt
+              <span>{profile.location}</span>
             </span>
           </div>
         </Reveal>

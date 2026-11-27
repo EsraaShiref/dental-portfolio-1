@@ -1,7 +1,7 @@
 export const profile = {
   name: "Dr. Mohamed Samy",
   title: "General Dentist",
-  location: "Tanta, Egypt",
+  location: "Dekernes City, Ad Daqahliyah, Egypt",
   phone: "+20 106 702 4087",
   phoneHref: "tel:+201067024087",
   email: "mohamedsamyakl1999@gmail.com",

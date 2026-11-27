@@ -5,6 +5,7 @@ import { Portfolio } from "@/components/portfolio/Portfolio";
 import { Contact } from "@/components/portfolio/Contact";
 import { Stories } from "@/components/portfolio/Stories";
 import { IntroSplash } from "@/components/portfolio/IntroSplash";
+import { profile } from "@/data/profile";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Meet Dr. Mohamed Samy, a Saudi-licensed General Dentist in Tanta, Egypt. Explore his education, clinical expertise, esthetic dentistry and dental content.",
+          `Meet Dr. Mohamed Samy, a Saudi-licensed General Dentist in ${profile.location}. Explore his education, clinical expertise, esthetic dentistry and dental content.`,
       },
       { property: "og:title", content: "Dr. Mohamed Samy | General Dentist" },
       {

@@ -86,7 +86,7 @@ export function Hero() {
             <span className="icon-tile"><Sparkles aria-hidden="true" /></span>
             <div><strong>Esthetic &amp; Restorative</strong><span>Dentistry with a personal touch</span></div>
           </div>
-          <div className="portrait-location"><MapPin size={14} aria-hidden="true" />{profile.location}</div>
+          <div className="portrait-location"><MapPin size={14} aria-hidden="true" /><span>{profile.location}</span></div>
         </motion.div>
       </div>
       <a href="#about" className={`hero-scroll${scrolled ? " hero-scroll--hidden" : ""}`} tabIndex={scrolled ? -1 : 0} aria-hidden={scrolled ? true : undefined}>Scroll<ChevronDown size={18} /></a>
