@@ -17,6 +17,7 @@ import {
   type DentalVideo,
 } from "@/data/portfolio";
 import { Reveal, SectionHeading } from "./shared";
+import { comparisonKeyboardPosition, comparisonLabels, comparisonPositionFromPointer } from "@/lib/comparison-slider";
 function CaseImage({ src, alt }: { src: string; alt: string }) {
   const [failed, setFailed] = useState(false);
   return failed ? (
@@ -37,16 +38,44 @@ export function BeforeAfterSlider({
   fit?: "cover" | "contain";
 }) {
   const [position, setPosition] = useState(50);
+  const pointerId = useRef<number | null>(null);
+  const handleRef = useRef<HTMLButtonElement>(null);
+  const labels = comparisonLabels(position);
   return (
     <div
       className={[
         "comparison",
+        "comparison--interactive",
         fit === "contain" && "comparison--contain",
         dentalCase.aspect === "square" && "comparison--square",
       ]
         .filter(Boolean)
         .join(" ")}
       onClick={(event) => event.stopPropagation()}
+      onPointerDown={(event) => {
+        if (!event.isPrimary || event.button !== 0) return;
+        pointerId.current = event.pointerId;
+        event.currentTarget.setPointerCapture(event.pointerId);
+        handleRef.current?.focus({ preventScroll: true });
+        if (!(event.target instanceof Element && event.target.closest(".comparison-handle"))) {
+          const bounds = event.currentTarget.getBoundingClientRect();
+          setPosition(comparisonPositionFromPointer(event.clientX, bounds.left, bounds.width));
+        }
+      }}
+      onPointerMove={(event) => {
+        if (pointerId.current !== event.pointerId) return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        setPosition(comparisonPositionFromPointer(event.clientX, bounds.left, bounds.width));
+      }}
+      onPointerUp={(event) => {
+        if (pointerId.current !== event.pointerId) return;
+        pointerId.current = null;
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.releasePointerCapture(event.pointerId);
+        }
+      }}
+      onPointerCancel={() => { pointerId.current = null; }}
+      onLostPointerCapture={() => { pointerId.current = null; }}
     >
       <div className="comparison-image">
         <CaseImage src={dentalCase.after} alt={caseAlt(dentalCase, "after")} />
@@ -54,22 +83,32 @@ export function BeforeAfterSlider({
       <div className="comparison-before" style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}>
         <CaseImage src={dentalCase.before} alt={caseAlt(dentalCase, "before")} />
       </div>
-      <span className="comparison-label before-label">Before</span>
-      <span className="comparison-label after-label">After</span>
-      <div className="comparison-line" style={{ left: `${position}%` }}>
-        <span>
-          <ChevronsLeftRight size={20} />
-        </span>
-      </div>
-      <input
-        type="range"
-        min="0"
-        max="100"
-        value={position}
-        onChange={(event) => setPosition(Number(event.target.value))}
-        className="comparison-range"
+      <span className={`comparison-label before-label${labels.before ? "" : " is-hidden"}`} aria-hidden={!labels.before}>Before</span>
+      <span className={`comparison-label after-label${labels.after ? "" : " is-hidden"}`} aria-hidden={!labels.after}>After</span>
+      <div className="comparison-line" style={{ left: `${position}%` }} />
+      <Button
+        ref={handleRef}
+        type="button"
+        variant="ghost"
+        size="icon"
+        role="slider"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={position}
+        aria-orientation="horizontal"
+        aria-valuetext={`${Math.round(position)}% Before, ${Math.round(100 - position)}% After`}
+        onKeyDown={(event) => {
+          const next = comparisonKeyboardPosition(position, event.key);
+          if (next === undefined) return;
+          event.preventDefault();
+          setPosition(next);
+        }}
+        className="comparison-handle"
+        style={{ left: `clamp(var(--comparison-handle-inset), ${position}%, calc(100% - var(--comparison-handle-inset)))` }}
         aria-label={`Before and after comparison for ${dentalCase.title}`}
-      />
+      >
+        <ChevronsLeftRight aria-hidden="true" />
+      </Button>
     </div>
   );
 }
@@ -168,7 +207,7 @@ export function Lightbox({
       }}
     >
       <DialogContent className="media-lightbox">
-        <DialogTitle>{selection?.item.title}</DialogTitle>
+        <DialogTitle className={selection?.kind === "case" ? "case-lightbox-title" : undefined}>{selection?.item.title}</DialogTitle>
         <DialogDescription>
           {selection?.kind === "case" ? selection.item.category : selection?.item.description}
         </DialogDescription>

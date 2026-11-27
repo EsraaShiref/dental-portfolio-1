@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUp, ChevronRight, Mail, Menu, MessageCircle, Phone, X } from "lucide-react";
+import { ArrowUp, ChevronRight, Mail, Menu, Phone, X } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { navigationOffset, scrollingDown } from "@/lib/mobile-navigation";
-import { appointmentUrl, navigation, profile, socials } from "@/data/profile";
+import { appointmentUrl, navigation, profile } from "@/data/profile";
 import { AppointmentButton } from "./shared";
-import { Facebook, Instagram, Youtube, Music2 } from "lucide-react";
+import { useDesktopFooterVisible } from "@/hooks/use-desktop-footer-visible";
 export function Navbar() {
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
@@ -102,6 +103,7 @@ export function Navbar() {
   );
 }
 export function FloatingWhatsApp() {
+  const footerVisible = useDesktopFooterVisible();
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
@@ -120,21 +122,23 @@ export function FloatingWhatsApp() {
     return () => { clearTimeout(timer); window.removeEventListener("scroll", update); window.removeEventListener("portfolio:menu", menu); };
   }, []);
   return (
-    <Button variant="accent" size="icon" className={`floating-whatsapp${hidden ? " floating-whatsapp--away" : ""}${menuOpen ? " floating-whatsapp--menu" : ""}`} asChild>
+    <Button variant="accent" size="icon" className={`floating-whatsapp${hidden ? " floating-whatsapp--away" : ""}${menuOpen ? " floating-whatsapp--menu" : ""}${footerVisible ? " floating-footer-hidden" : ""}`} asChild>
       <a
         href={appointmentUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Book an appointment on WhatsApp"
+        aria-label="Chat on WhatsApp"
         title="Book on WhatsApp"
-        tabIndex={menuOpen ? -1 : undefined}
+        tabIndex={menuOpen || footerVisible ? -1 : undefined}
+        aria-hidden={footerVisible || undefined}
       >
-        <MessageCircle />
+        <FaWhatsapp aria-hidden="true" />
       </a>
     </Button>
   );
 }
 export function ScrollToTop() {
+  const footerVisible = useDesktopFooterVisible();
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const update = () => setVisible(window.scrollY > 600);
@@ -146,7 +150,9 @@ export function ScrollToTop() {
     <Button
       variant="outline"
       size="icon"
-      className="scroll-top"
+      className={`scroll-top${footerVisible ? " floating-footer-hidden" : ""}`}
+      tabIndex={footerVisible ? -1 : undefined}
+      aria-hidden={footerVisible || undefined}
       aria-label="Back to top"
       title="Back to top"
       onClick={() =>
@@ -163,63 +169,34 @@ export function ScrollToTop() {
   ) : null;
 }
 export function Footer() {
-  const icons = [Instagram, Music2, Youtube, Facebook];
   return (
     <footer>
       <div className="container">
-        <div className="footer-main">
-          <a href="#home" className="brand">
-            <img className="avatar-logo avatar-logo--footer" src="/doctor-avatar.png" alt="Dr. Mohamed Samy" width="56" height="56" />
-            <span>
-              {profile.name}
-              <small>General Dentist • Tanta, Egypt</small>
-            </span>
-          </a>
-          <nav aria-label="Footer navigation">
-            {navigation.map((name) => (
-              <a href={`#${name.toLowerCase()}`} key={name}>
-                {name}
-              </a>
-            ))}
-          </nav>
-          <div className="socials">
-            {socials.map((social, index) => {
-              const Icon = icons[index];
-              return Icon ? (
-                <Button asChild variant="footer" size="icon" key={social.name}>
-                  <a href={social.href} aria-label={social.name} title={social.name}>
-                    <Icon />
-                  </a>
-                </Button>
-              ) : null;
-            })}
-          </div>
-        </div>
-        <div className="footer-mobile">
-          <a href="#home" className="footer-mobile-brand">
+        <div className="footer-shared">
+          <div className="footer-column footer-identity">
+          <a href="#home" className="footer-shared-brand">
             <img className="avatar-logo avatar-logo--footer" src="/doctor-avatar.png" alt="Dr. Mohamed Samy" width="56" height="56" />
             {profile.name}
           </a>
-          <p>General Dentist focused on esthetic dentistry, endodontics and patient-centered care.</p>
-          <div>
+          <p className="footer-description">General Dentist focused on esthetic dentistry, endodontics and patient-centered care.</p>
+          </div>
+          <div className="footer-column footer-links">
             <h2>Quick Links</h2>
             <nav aria-label="Footer quick links">
               {navigation.map((name) => <a href={`#${name.toLowerCase()}`} key={name}>{name}</a>)}
             </nav>
           </div>
-          <div>
+          <div className="footer-column footer-contact">
+            <div className="footer-connect-group">
             <h2>Connect</h2>
             <div className="footer-connect">
-              <a href={`mailto:${profile.email}`} aria-label="Email"><Mail /></a>
-              <a href={profile.phoneHref} aria-label="Phone"><Phone /></a>
-              <a href={appointmentUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="footer-connect-whatsapp"><MessageCircle /></a>
+              <Button asChild variant="footer" size="icon"><a href={`mailto:${profile.email}`} aria-label="Email" title="Email"><Mail /></a></Button>
+              <Button asChild variant="footer" size="icon"><a href={profile.phoneHref} aria-label="Phone" title="Phone"><Phone /></a></Button>
+              <Button asChild variant="footer" size="icon"><a href={appointmentUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp" className="footer-connect-whatsapp"><FaWhatsapp aria-hidden="true" /></a></Button>
             </div>
+            </div>
+            <div className="footer-shared-copy"><span>© {new Date().getFullYear()} Dr. Mohamed Samy.</span>{" "}<span>All rights reserved.</span></div>
           </div>
-          <div className="footer-mobile-copy">© {new Date().getFullYear()} Dr. Mohamed Samy. All rights reserved.</div>
-        </div>
-        <div className="footer-bottom">
-          © {new Date().getFullYear()} Dr. Mohamed Samy. All rights reserved.
-          <span>Precision. Care. Confidence.</span>
         </div>
       </div>
     </footer>

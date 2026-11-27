@@ -6,6 +6,7 @@ import {
   bookingErrors,
   buildBookingUrl,
   experience,
+  experienceHighlights,
   skillGroups,
   courses,
   courseTracks,
@@ -32,7 +33,7 @@ describe("Portfolio rules", () => {
   });
   it("derives documented case statistics from every portfolio case", () => {
     expect(heroStats[2].value).toBe(cases.length);
-    expect(heroStats[2].value).toBe(23);
+    expect(heroStats[2].value).toBe(22);
   });
   it("groups all eleven existing courses into the four supplied tracks without duplicates", () => {
     expect(courseTracks.map((track) => [track.title, track.icon, [...track.courseNames]])).toEqual([
@@ -88,11 +89,29 @@ describe("Portfolio rules", () => {
     );
   });
   it("contains only the three supplied clinics", () => {
-    expect(experience.map((item) => item.name)).toEqual([
+    expect(experience.map((item) => item.clinic)).toEqual([
       "Elsalam Dental Clinic",
       "Tiba Dental Clinic",
       "Zidan Dental Clinic",
     ]);
+  });
+  it("keeps General Dentist as the role at all three clinics", () => {
+    expect(experience.map((item) => item.role)).toEqual([
+      "General Dentist", "General Dentist", "General Dentist",
+    ]);
+  });
+  it("leaves periods, descriptions and highlights absent for all three clinics", () => {
+    expect(experience).toHaveLength(3);
+    for (const entry of experience) {
+      expect(Object.keys(entry).sort()).toEqual(["clinic", "id", "role"]);
+    }
+  });
+  it("limits optional clinic highlights to the first three", () => {
+    const entry = { id: "test", clinic: "Test clinic", role: "General Dentist" };
+    expect(experienceHighlights(entry)).toEqual([]);
+    expect(experienceHighlights({ ...entry, highlights: [] })).toEqual([]);
+    expect(experienceHighlights({ ...entry, highlights: ["a", "b"] })).toEqual(["a", "b"]);
+    expect(experienceHighlights({ ...entry, highlights: ["a", "b", "c", "d"] })).toEqual(["a", "b", "c"]);
   });
   it("contains exactly the supplied skill groups and items", () => {
     expect(skillGroups.map((group) => group.items)).toEqual([
@@ -137,7 +156,7 @@ describe("Portfolio rules", () => {
   it("contains exactly the real cases per category", () => {
     const count = (c: string) => cases.filter((item) => item.category === c).length;
     expect(count("Restorative")).toBe(6);
-    expect(count("Prosthodontics")).toBe(8);
+    expect(count("Prosthodontics")).toBe(7);
     expect(count("Endodontics")).toBe(5);
     expect(count("Surgery")).toBe(4);
     const surgery = cases.filter((i) => i.category === "Surgery");
@@ -182,7 +201,7 @@ describe("Portfolio rules", () => {
     expect(categoryLabel("Prosthodontics")).toBe("Fixed");
     const titles = cases.filter((c) => c.category === "Prosthodontics").map((c) => c.title);
     expect(titles[0]).toBe("Fixed Case 1");
-    expect(titles[7]).toBe("Fixed Case 8");
+    expect(titles).toEqual(Array.from({ length: 7 }, (_, i) => `Fixed Case ${i + 1}`));
     expect(JSON.stringify(cases)).not.toMatch(/Prosthodontics [Cc]ase/);
   });
   it("starts with 6 cases and mixes categories in All", () => {
@@ -190,7 +209,29 @@ describe("Portfolio rules", () => {
     expect(filterCases(cases, "All").slice(0, 4).map((c) => c.category)).toEqual([
       "Restorative", "Prosthodontics", "Endodontics", "Surgery",
     ]);
-    expect(filterCases(cases, "All")).toHaveLength(23);
+    expect(filterCases(cases, "All")).toHaveLength(22);
+  });
+  it("removes only the duplicate Fixed record and keeps the Restorative case", () => {
+    expect(cases.some((item) => item.id === "fixed-1")).toBe(false);
+    const restorative = cases.find((item) => item.id === "restorative-1");
+    expect(restorative && caseImages(restorative)).toEqual([
+      "/cases/restorative/restorative-1-before.jpeg", "/cases/restorative/restorative-1-after.jpeg",
+    ]);
+  });
+  it("keeps each renumbered Fixed case linked to its original photos and matching alt text", () => {
+    const fixed = cases.filter((item) => item.category === "Prosthodontics");
+    expect(fixed).toHaveLength(7);
+    fixed.forEach((item, index) => {
+      expect(item.id).toBe(`fixed-${index + 2}`);
+      expect(caseImages(item)).toEqual([
+        `/cases/prosthodontics/fixed-${index + 2}-before.jpeg`,
+        `/cases/prosthodontics/fixed-${index + 2}-after.jpeg`,
+      ]);
+      expect(item.kind === "comparison" && item.alt).toEqual({
+        before: `Fixed case ${index + 1} – before treatment`,
+        after: `Fixed case ${index + 1} – after treatment`,
+      });
+    });
   });
   it("uses square cards for every case", () => {
     expect(cases.every((c) => c.aspect === "square")).toBe(true);

@@ -6,7 +6,7 @@ export const profile = {
   phoneHref: "tel:+201067024087",
   email: "mohamedsamyakl1999@gmail.com",
   portrait: "/images/mohamed-samy-portrait.png",
-  bio: "Dr. Mohamed Samy is a General Dentist with a Bachelor of Dental Surgery (BDS) from Delta University and hands-on experience across multiple dental clinics in Egypt. He is passionate about esthetic dentistry, endodontics and conservative restorative care, combining modern digital tools such as Digital Smile Design and Exocad with magnification (dental loupes) to deliver precise, comfortable and natural-looking results. Holding a Saudi license, a passed Prometric exam and a valid DataFlow, he is fully prepared to practice in the Gulf region. Beyond the clinic, Dr. Mohamed creates dental content to educate patients and make dentistry easier to understand, building trust through clear communication and a patient-first approach.",
+  bio: "Dr. Mohamed Samy is a General Dentist with a Bachelor of Dental Surgery (BDS) from Delta University and hands-on experience across several dental clinics in Egypt. He focuses on esthetic dentistry, endodontics and conservative restorative care, using digital tools such as Digital Smile Design and Exocad, together with dental loupes, to deliver precise, natural-looking results. Holding a Saudi license, a passed Prometric exam and a valid DataFlow, he is ready to practice in the Gulf region. He also creates dental content to educate patients.",
   credentials: [
     "Saudi License Holder",
     "Passed Prometric Test",
@@ -28,16 +28,22 @@ export const education = {
   degree: "Bachelor of Dental Surgery (BDS)",
   university: "Delta University",
 };
-export const experience = [
-  "Elsalam Dental Clinic",
-  "Tiba Dental Clinic",
-  "Zidan Dental Clinic",
-].map((name) => ({
-  name,
-  role: "General Dentist",
-  description:
-    "Provided comprehensive general dental care including restorative, endodontic and esthetic treatments.",
-}));
+export type Experience = {
+  id: string;
+  clinic: string;
+  role: string;
+  period?: string;
+  description?: string;
+  highlights?: string[];
+};
+export const experience: Experience[] = [
+  { id: "elsalam", clinic: "Elsalam Dental Clinic", role: "General Dentist" },
+  { id: "tiba", clinic: "Tiba Dental Clinic", role: "General Dentist" },
+  { id: "zidan", clinic: "Zidan Dental Clinic", role: "General Dentist" },
+];
+export function experienceHighlights(entry: Experience): string[] {
+  return entry.highlights?.slice(0, 3) ?? [];
+}
 export const skillGroups = [
   {
     title: "Clinical Skills",

@@ -16,7 +16,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { education, experience, profile, skillGroups } from "@/data/profile";
+import { education, experience, experienceHighlights, profile, skillGroups } from "@/data/profile";
 import { AppointmentButton, Reveal, SectionHeading } from "./shared";
 import { Courses } from "./Courses";
 function Count({ value }: { value: number }) {
@@ -51,10 +51,9 @@ export function Hero() {
             <span />
             General Dentist • Dental Content Creator
           </div>
-          <h2>
-            Precise dentistry.
-            <br />
-            Patient-centered care.
+          <h2 className="hero-headline">
+            <span className="hero-headline-line">Precise dentistry.</span>
+            <span className="hero-headline-line hero-headline-accent"><span className="hero-patient-centered">Patient‑centered</span> care.</span>
           </h2>
           <p className="hero-subheading">
             General Dentist focused on esthetic dentistry, endodontics and patient-centered care.
@@ -174,7 +173,6 @@ export function About() {
           <SectionHeading
             eyebrow="About Me"
             title="Dedicated to healthy, confident smiles"
-            subtitle="A thoughtful approach. A natural result."
           />
           <Reveal>
             <p className="bio">{profile.bio}</p>
@@ -237,15 +235,26 @@ export function Education() {
           </Reveal>
           <div className="timeline">
             {experience.map((entry, i) => (
-              <Reveal key={entry.name} className="timeline-item">
+              <Reveal key={entry.id} className="timeline-item">
                 <span className="timeline-icon">
                   <Building2 />
                 </span>
                 <div>
                   <span className="timeline-number">CLINICAL EXPERIENCE / 0{i + 1}</span>
-                  <h3>{entry.name}</h3>
+                  <h3>{entry.clinic}</h3>
                   <span className="role">{entry.role}</span>
-                  <p>{entry.description}</p>
+                  {entry.period && <span className="timeline-period type-small">{entry.period}</span>}
+                  {entry.description && <p>{entry.description}</p>}
+                  {experienceHighlights(entry).length > 0 && (
+                    <ul className="timeline-highlights">
+                      {experienceHighlights(entry).map((highlight, index) => (
+                        <li key={`${entry.id}-${index}`}>
+                          <Check aria-hidden="true" />
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </Reveal>
             ))}

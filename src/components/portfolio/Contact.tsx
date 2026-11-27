@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
-import { ArrowUpRight, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { buildBookingUrl, bookingErrors, profile, type Booking } from "@/data/profile";
 import { Reveal, SectionHeading } from "./shared";
@@ -60,7 +61,7 @@ export function Contact() {
         </div>
         <Reveal className="booking-card">
           <span className="icon-tile">
-            <MessageCircle />
+            <FaWhatsapp aria-hidden="true" />
           </span>
           <h3>
             Book an Appointment
@@ -116,7 +117,7 @@ export function Contact() {
               onChange={(event) => setBooking({ ...booking, message: event.target.value })}
             />
             <Button variant="accent" size="lg" type="submit">
-              <MessageCircle />
+              <FaWhatsapp aria-hidden="true" />
               Book Appointment
               <ArrowUpRight />
             </Button>

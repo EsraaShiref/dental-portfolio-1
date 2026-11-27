@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, MessageCircle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { appointmentUrl } from "@/data/profile";
@@ -25,14 +26,14 @@ export function SectionHeading({
 }: {
   eyebrow: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   align?: "start" | "center";
 }) {
   return (
     <Reveal className={align === "center" ? "section-heading section-heading--center" : "section-heading"}>
       <span className="eyebrow">{eyebrow}</span>
       <h2>{title}</h2>
-      <p>{subtitle}</p>
+      {subtitle && <p>{subtitle}</p>}
     </Reveal>
   );
 }
@@ -48,7 +49,7 @@ export function AppointmentButton({
   return (
     <Button variant={accent ? "accent" : "default"} size="lg" asChild className={className}>
       <a href={appointmentUrl} target="_blank" rel="noopener noreferrer">
-        <MessageCircle size={18} />
+        <FaWhatsapp size={18} aria-hidden="true" />
         {children}
         <ArrowUpRight size={16} />
       </a>
