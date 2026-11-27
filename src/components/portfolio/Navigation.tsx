@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { navigationOffset, scrollingDown } from "@/lib/mobile-navigation";
 import { appointmentUrl, navigation, profile } from "@/data/profile";
 import { AppointmentButton } from "./shared";
-import { useDesktopFooterVisible } from "@/hooks/use-desktop-footer-visible";
+import { useFooterVisible } from "@/hooks/use-footer-visible";
 export function Navbar() {
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
@@ -103,7 +103,7 @@ export function Navbar() {
   );
 }
 export function FloatingWhatsApp() {
-  const footerVisible = useDesktopFooterVisible();
+  const footerVisible = useFooterVisible();
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
@@ -129,7 +129,7 @@ export function FloatingWhatsApp() {
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
         title="Book on WhatsApp"
-        tabIndex={menuOpen || footerVisible ? -1 : undefined}
+        tabIndex={menuOpen || hidden || footerVisible ? -1 : undefined}
         aria-hidden={footerVisible || undefined}
       >
         <FaWhatsapp aria-hidden="true" />
@@ -138,7 +138,7 @@ export function FloatingWhatsApp() {
   );
 }
 export function ScrollToTop() {
-  const footerVisible = useDesktopFooterVisible();
+  const footerVisible = useFooterVisible();
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const update = () => setVisible(window.scrollY > 600);
