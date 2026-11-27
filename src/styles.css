@@ -3,7 +3,7 @@
 @source "../src";
 @custom-variant dark (&:is(.dark *));
 :root {
-  --type-experience-highlight: 0.875rem;
+  --type-experience-highlight: 0.75rem;
   --background: oklch(1 0 89.8756);
   --foreground: oklch(0.207682 0.039824 265.7549);
   --primary: oklch(0.294774 0.095341 259.5345);
@@ -2338,28 +2338,30 @@ footer { padding-bottom: 0; }
 /* One rem-based typography system; change the root font size to scale every role. */
 :root {
   --type-root: 16px;
-  --type-display: clamp(1.875rem, 1.536rem + 1.506vw, 2.5rem);
-  --type-h2: clamp(1.625rem, 1.422rem + 0.904vw, 2rem);
-  --type-h3: clamp(1rem, 0.932rem + 0.301vw, 1.125rem);
-  --type-h4: 0.9375rem;
-  --type-case-title: 1rem;
+  --type-display: clamp(1.75rem, 1.411rem + 1.506vw, 2.375rem);
+  --type-h2: clamp(1.5rem, 1.297rem + 0.904vw, 1.875rem);
+  --type-h3: clamp(0.875rem, 0.807rem + 0.301vw, 1rem);
+  --type-h4: 0.8125rem;
+  --type-case-title: 0.875rem;
   --type-category-pill: 0.6875rem;
   --type-case-arrow: 1rem;
   --type-leading-case-title: 1.35;
-  --type-portfolio-heading: 1.25rem;
+  --type-portfolio-heading: 1.125rem;
   --type-portfolio-chip-tracking: 0.06em;
   --portfolio-chip-foreground: #334155;
-  --type-lead: clamp(0.9375rem, 0.904rem + 0.151vw, 1rem);
-  --type-body: 0.9375rem;
-  --type-story-quote: clamp(1rem, 0.966rem + 0.151vw, 1.0625rem);
-  --type-small: 0.8125rem;
-  --type-caption: 0.75rem;
-  --type-nav: 0.875rem;
+  --type-lead: clamp(0.8125rem, 0.779rem + 0.151vw, 0.875rem);
+  --type-body: 0.8125rem;
+  --type-story-quote: clamp(0.875rem, 0.841rem + 0.151vw, 0.9375rem);
+  --type-small: 0.75rem;
+  --type-caption: 0.6875rem;
+  --type-nav: 0.8125rem;
   --type-drawer-nav: var(--type-nav);
-  --type-button: 0.875rem;
-  --type-brand: 1.0625rem;
-  --type-number: 1.75rem;
-  --type-signature: 1.5rem;
+  --type-button: 0.8125rem;
+  --type-brand: 0.9375rem;
+  --type-number: 1.625rem;
+  --type-signature: 1.375rem;
+  --type-ui-base: 0.875rem;
+  --type-ui-title: 1rem;
   --type-weight-regular: 400;
   --type-weight-medium: 500;
   --type-weight-semibold: 600;
@@ -2378,6 +2380,10 @@ footer { padding-bottom: 0; }
   --type-header-gap: 0.75rem;
 }
 @theme inline {
+  --text-xs: var(--type-caption);
+  --text-sm: var(--type-small);
+  --text-base: var(--type-ui-base);
+  --text-lg: var(--type-ui-title);
   --text-type-display: var(--type-display);
   --text-type-h2: var(--type-h2);
   --text-type-h3: var(--type-h3);
@@ -2391,13 +2397,13 @@ footer { padding-bottom: 0; }
 }
 @media (max-width: 767px) {
   :root {
-    --type-display: clamp(1.625rem, 7vw, 1.875rem);
+    --type-display: clamp(1.5rem, 6.4vw, 1.75rem);
     --type-leading-display: 1.15;
-    --type-h2: 1.625rem;
-    --type-h3: 1rem;
-    --type-lead: 0.9375rem;
-    --type-story-quote: 1rem;
-    --type-drawer-nav: 1.25rem;
+    --type-h2: 1.5rem;
+    --type-h3: 0.875rem;
+    --type-lead: 0.8125rem;
+    --type-story-quote: 0.875rem;
+    --type-drawer-nav: 1.125rem;
     --type-control-height: 3rem;
   }
 }
